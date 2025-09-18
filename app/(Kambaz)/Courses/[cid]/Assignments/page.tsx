@@ -47,6 +47,15 @@ export default function Assignments() {
                     <b>Due</b> May 27 at 11:59pm | 100 pts
                 </li>
             </ul>
+            <h3>
+                QUIZZES 20% of Total <button>+</button>
+            </h3>
+            <h3>
+                EXAMS 20% of Total <button>+</button>
+            </h3>
+            <h3>
+                PROJECT 20% of Total <button>+</button>
+            </h3>
         </div>
     );
 }

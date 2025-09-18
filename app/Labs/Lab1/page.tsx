@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 export default function Lab1() {
     const handleClick = () => {
@@ -8,6 +9,15 @@ export default function Lab1() {
     return (
         <div id="wd-lab1">
             <h2>Lab 1</h2>
+            <b>Name: </b>Christopher Allison
+            <br />
+            <b>Section: </b>04
+            <br />
+            <b>Source: </b>
+            <Link href="https://github.com/chopndolphy/kambaz-next-js">
+                Github Repo
+            </Link>
+            <br />
             <h3>HTML Examples</h3>
             <div id="wd-h-tag">
                 <h4>Heading Tags</h4>

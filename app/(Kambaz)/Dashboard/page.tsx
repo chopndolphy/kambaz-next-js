@@ -24,6 +24,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/8732" className="wd-dashboard-course-link">
                         <Image
@@ -39,6 +41,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/1012" className="wd-dashboard-course-link">
                         <Image src="/images/java.jpg" width={200} height={150} alt="Java" />
@@ -51,6 +55,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/3288" className="wd-dashboard-course-link">
                         <Image
@@ -66,6 +72,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/3102" className="wd-dashboard-course-link">
                         <Image src="/images/cpp.jpg" width={200} height={150} alt="C++" />
@@ -78,6 +86,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/0001" className="wd-dashboard-course-link">
                         <Image
@@ -93,6 +103,8 @@ export default function Dashboard() {
                         </div>
                     </Link>
                 </div>
+                <br /> {/* May need to remove later */}
+                <br /> {/* May need to remove later */}
                 <div className="wd-dashboard-course">
                     <Link href="/Courses/8900" className="wd-dashboard-course-link">
                         <Image
