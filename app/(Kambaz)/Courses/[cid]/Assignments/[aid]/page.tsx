@@ -157,10 +157,10 @@ export default function AssignmentEditor() {
                 </tr>
             </table>
             <hr />
-            <div align="right">
+            <table align="right">
                 <button type="button">Cancel</button>
                 <button type="button">Save</button>
-            </div>
+            </table>
         </div>
     );
 }
