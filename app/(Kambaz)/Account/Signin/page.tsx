@@ -1,30 +1,33 @@
 import Link from "next/link";
+import { FormControl } from "react-bootstrap";
+
 export default function Signin() {
     return (
         <div id="wd-signin-screen">
-            <h3>Sign in</h3>
-            {/* Added defaultValues as mentioned in rubric */}
-            <input
+            <h1>Sign in</h1>
+            <FormControl
                 placeholder="username"
                 type="text"
-                className="wd-username"
+                id="wd-username"
+                className="mb-2"
                 defaultValue="alice"
             />
-            <br />
-            <input
+            <FormControl
                 placeholder="password"
                 type="password"
-                className="wd-password"
+                id="wd-password"
                 defaultValue="123"
+                className="mb-2"
             />
-            <br />
-            <Link href="/Dashboard" id="wd-signin-btn">
-                <button>Sign in</button>
+            <Link
+                href="/Dashboard"
+                id="wd-signin-btn"
+                className="btn btn-primary w-100 mb-2"
+            >
+                Sign in
             </Link>
-            <br />
-            <br /> {/* May need to remove later */}
             <Link href="Signup" id="wd-signup-link">
-                <button>Sign up</button>
+                Sign up
             </Link>
         </div>
     );
