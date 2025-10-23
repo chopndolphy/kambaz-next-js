@@ -1,12 +1,11 @@
 "use client";
 import React from "react";
 import { useParams } from "next/navigation";
-import * as db from "../../../../Database";
+import { User, users, enrollments } from "../../../../Database";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 export default function PeopleTable() {
     const { cid } = useParams();
-    const { users, enrollments } = db;
     return (
         <div id="wd-people-table">
             <Table striped>
@@ -28,7 +27,7 @@ export default function PeopleTable() {
                                     enrollment.user === usr._id && enrollment.course === cid,
                             ),
                         )
-                        .map((user: any) => (
+                        .map((user) => (
                             <tr key={user._id}>
                                 <td className="wd-full-name text-nowrap">
                                     <FaUserCircle className="me-2 fs-1 text-secondary" />

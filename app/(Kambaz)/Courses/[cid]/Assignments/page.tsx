@@ -31,11 +31,12 @@ export default function Assignments() {
                     </div>
                     <ListGroup id="wd-assignment-list" className="rounded-0">
                         {assignments
-                            .filter((assignment: any) => assignment.course === cid)
-                            .map((assignment: any) => (
+                            .filter((assignment) => assignment.course === cid)
+                            .map((assignment) => (
                                 <ListGroupItem
                                     id="wd-assignment-list-item"
                                     className="p-3 ps-1 wd-lesson"
+                                    key={assignment._id}
                                 >
                                     <div className="d-flex align-items-center">
                                         <div>
