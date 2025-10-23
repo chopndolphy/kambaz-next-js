@@ -1,7 +1,7 @@
-export default function People() {
-    return (
-        <div>
-            <h2>People</h2>
-        </div>
-    );
+import { redirect } from "next/navigation";
+export default async function People({
+    params,
+}: Readonly<{ params: Promise<{ cid: string }> }>) {
+    const { cid } = await params;
+    return redirect(`/Courses/${cid}/People/Table`);
 }

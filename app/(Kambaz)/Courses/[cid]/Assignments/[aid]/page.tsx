@@ -1,3 +1,4 @@
+"use client";
 import {
     FormControl,
     FormLabel,
@@ -7,22 +8,34 @@ import {
     Button,
 } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
+import { useParams } from "next/navigation";
+import * as db from "../../../../Database";
+import Link from "next/link";
+
+const formatDate = (dateString: string | undefined): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0];
+};
 
 export default function AssignmentEditor() {
+    const { aid, cid } = useParams();
+    const assignments = db.assignments;
+    const assignment = assignments.find((assignment) => assignment._id === aid);
+
     return (
         <div id="wd-assignments-editor" className="fs-6 m-1">
             <div className="py-3">
                 <div className="mb-3">
                     <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
-                    <FormControl id="wd-name" type="text" value="A1 - ENV + HTML" />
+                    <FormControl id="wd-name" type="text" value={assignment?.title} />
                 </div>
                 <div className="mb-3">
                     <FormControl
                         as="textarea"
                         id="wd-description"
                         rows={10}
-                        value="The assignment is available online Submit a link to the landing page
-                        of"
+                        value={assignment?.description}
                     ></FormControl>
                 </div>
                 <div className="m-2">
@@ -31,7 +44,11 @@ export default function AssignmentEditor() {
                             <FormLabel htmlFor="wd-points">Points</FormLabel>
                         </Col>
                         <Col sm={8}>
-                            <FormControl id="wd-points" type="number" value={100} />
+                            <FormControl
+                                id="wd-points"
+                                type="number"
+                                value={assignment?.points}
+                            />
                         </Col>
                     </Row>
                     <Row className="mb-3">
@@ -138,7 +155,7 @@ export default function AssignmentEditor() {
                                     </FormLabel>
                                     <FormControl
                                         type="date"
-                                        value="2024-05-13"
+                                        value={formatDate(assignment?.due)}
                                         id="wd-due-date"
                                     />
                                 </div>
@@ -149,7 +166,7 @@ export default function AssignmentEditor() {
                                         </FormLabel>
                                         <FormControl
                                             type="date"
-                                            value="2024-05-06"
+                                            value={formatDate(assignment?.available)}
                                             id="wd-available-from"
                                         />
                                     </Col>
@@ -159,7 +176,7 @@ export default function AssignmentEditor() {
                                         </FormLabel>
                                         <FormControl
                                             type="date"
-                                            value="2024-05-20"
+                                            value={formatDate(assignment?.due)}
                                             id="wd-available-until"
                                         />
                                     </Col>
@@ -171,12 +188,16 @@ export default function AssignmentEditor() {
             </div>
             <hr />
 
-            <Button variant="danger" size="lg" className="me-1 float-end">
-                Save
-            </Button>
-            <Button variant="secondary" size="lg" className="me-1 float-end">
-                Cancel
-            </Button>
+            <Link href={`/Courses/${cid}/Assignments`}>
+                <Button variant="danger" size="lg" className="me-1 float-end">
+                    Save
+                </Button>
+            </Link>
+            <Link href={`/Courses/${cid}/Assignments`}>
+                <Button variant="secondary" size="lg" className="me-1 float-end">
+                    Cancel
+                </Button>
+            </Link>
         </div>
     );
 }
