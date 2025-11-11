@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import * as db from "../../Database";
 import { FormControl, Button } from "react-bootstrap";
+import { User } from "../../Database";
 
 export default function Signin() {
     const [credentials, setCredentials] = useState<{
@@ -19,8 +20,7 @@ export default function Signin() {
                 u.username === credentials.username &&
                 u.password === credentials.password,
         );
-        if (!user) return;
-        dispatch(setCurrentUser(user));
+        dispatch(setCurrentUser(user as User));
         redirect("/Dashboard");
     };
 
