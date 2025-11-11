@@ -9,10 +9,16 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { PiNotePencil } from "react-icons/pi";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/(Kambaz)/store";
+import { addAssignment, deleteAssignment } from "./reducer";
 
 export default function Assignments() {
-    const { cid } = useParams();
-    const assignments = db.assignments;
+    const { cid } = useParams<{ cid: string }>();
+    const { assignments } = useSelector(
+        (state: RootState) => state.assignmentsReducer,
+    );
+    const dispatch = useDispatch();
     return (
         <div>
             <AssignmentsControls />
@@ -67,7 +73,12 @@ export default function Assignments() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <AssignmentControlButtons />
+                                        <AssignmentControlButtons
+                                            assignmentName={assignment.title}
+                                            deleteAssignment={() =>
+                                                dispatch(deleteAssignment(assignment._id))
+                                            }
+                                        />
                                     </div>
                                 </ListGroupItem>
                             ))}

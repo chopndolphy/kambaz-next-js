@@ -8,9 +8,14 @@ import {
     Button,
 } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
-import { useParams } from "next/navigation";
-import * as db from "../../../../Database";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { RootState } from "@/app/(Kambaz)/store";
+import { useSelector, useDispatch } from "react-redux";
+import { Assignment } from "../../../../Database";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { addAssignment, updateAssignment } from "../reducer";
 
 const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return "";
@@ -19,23 +24,54 @@ const formatDate = (dateString: string | undefined): string => {
 };
 
 export default function AssignmentEditor() {
-    const { aid, cid } = useParams();
-    const assignments = db.assignments;
-    const assignment = assignments.find((assignment) => assignment._id === aid);
+    const { aid, cid } = useParams<{ aid: string; cid: string }>();
+    const { assignments } = useSelector(
+        (state: RootState) => state.assignmentsReducer,
+    );
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const getAssignment = (): Assignment => {
+        const a = assignments.find(
+            (assignment: Assignment) => assignment._id === aid,
+        );
+        return a
+            ? a
+            : {
+                _id: uuidv4(),
+                course: cid,
+                title: "",
+                description: "",
+                points: 0,
+                available: "2025-10-31T23:59:00",
+                due: "2025-11-07T23:59:00",
+                until: "2025-11-07T23:59:00",
+            };
+    };
+    const [assignment, setAssignment] = useState<Assignment>(getAssignment());
 
     return (
         <div id="wd-assignments-editor" className="fs-6 m-1">
             <div className="py-3">
                 <div className="mb-3">
                     <FormLabel htmlFor="wd-name">Assignment Name</FormLabel>
-                    <FormControl id="wd-name" type="text" value={assignment?.title} />
+                    <FormControl
+                        id="wd-name"
+                        type="text"
+                        value={assignment.title}
+                        onChange={(e) => {
+                            setAssignment({ ...assignment, title: e.target.value });
+                        }}
+                    />
                 </div>
                 <div className="mb-3">
                     <FormControl
                         as="textarea"
                         id="wd-description"
                         rows={10}
-                        value={assignment?.description}
+                        value={assignment.description}
+                        onChange={(e) => {
+                            setAssignment({ ...assignment, description: e.target.value });
+                        }}
                     ></FormControl>
                 </div>
                 <div className="m-2">
@@ -47,7 +83,13 @@ export default function AssignmentEditor() {
                             <FormControl
                                 id="wd-points"
                                 type="number"
-                                value={assignment?.points}
+                                value={assignment.points}
+                                onChange={(e) => {
+                                    setAssignment({
+                                        ...assignment,
+                                        points: parseInt(e.target.value, 10) || 0,
+                                    });
+                                }}
                             />
                         </Col>
                     </Row>
@@ -147,7 +189,7 @@ export default function AssignmentEditor() {
                                     <FormLabel htmlFor="wd-assign-to" className="fs-6 pt-1">
                                         <b>Assign to</b>
                                     </FormLabel>
-                                    <FormControl id="wd-assign-to" value={"Everyone"} />
+                                    <FormControl id="wd-assign-to" defaultValue={"Everyone"} />
                                 </div>
                                 <div className="mb-3">
                                     <FormLabel htmlFor="wd-due-date" className="fs-6">
@@ -155,8 +197,11 @@ export default function AssignmentEditor() {
                                     </FormLabel>
                                     <FormControl
                                         type="date"
-                                        value={formatDate(assignment?.due)}
+                                        value={formatDate(assignment.due)}
                                         id="wd-due-date"
+                                        onChange={(e) => {
+                                            setAssignment({ ...assignment, due: e.target.value });
+                                        }}
                                     />
                                 </div>
                                 <Row className="d-flex">
@@ -166,8 +211,14 @@ export default function AssignmentEditor() {
                                         </FormLabel>
                                         <FormControl
                                             type="date"
-                                            value={formatDate(assignment?.available)}
+                                            value={formatDate(assignment.available)}
                                             id="wd-available-from"
+                                            onChange={(e) => {
+                                                setAssignment({
+                                                    ...assignment,
+                                                    available: e.target.value,
+                                                });
+                                            }}
                                         />
                                     </Col>
                                     <Col className="mb-3">
@@ -176,8 +227,14 @@ export default function AssignmentEditor() {
                                         </FormLabel>
                                         <FormControl
                                             type="date"
-                                            value={formatDate(assignment?.due)}
+                                            value={formatDate(assignment.until)}
                                             id="wd-available-until"
+                                            onChange={(e) => {
+                                                setAssignment({
+                                                    ...assignment,
+                                                    until: e.target.value,
+                                                });
+                                            }}
                                         />
                                     </Col>
                                 </Row>
@@ -188,16 +245,29 @@ export default function AssignmentEditor() {
             </div>
             <hr />
 
-            <Link href={`/Courses/${cid}/Assignments`}>
-                <Button variant="danger" size="lg" className="me-1 float-end">
-                    Save
-                </Button>
-            </Link>
-            <Link href={`/Courses/${cid}/Assignments`}>
-                <Button variant="secondary" size="lg" className="me-1 float-end">
-                    Cancel
-                </Button>
-            </Link>
+            <Button
+                variant="danger"
+                size="lg"
+                className="me-1 float-end"
+                onClick={() => {
+                    dispatch(
+                        aid === "new"
+                            ? addAssignment(assignment)
+                            : updateAssignment(assignment),
+                    );
+                    router.back();
+                }}
+            >
+                Save
+            </Button>
+            <Button
+                variant="secondary"
+                size="lg"
+                className="me-1 float-end"
+                onClick={() => router.back()}
+            >
+                Cancel
+            </Button>
         </div>
     );
 }

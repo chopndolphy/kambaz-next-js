@@ -4,80 +4,89 @@
     "title": "Propulsion Assignment",
     "course": "RS101",
     "description": "Design the propulsion system for the rocket",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-06T23:59:00",
-    "due": "2024-05-13T23:59:00"
+    "due": "2024-05-13T23:59:00",
+    "until": "2024-05-13T23:59:00"
   },
   {
     "_id": "A102",
     "title": "Combustion Analysis",
     "course": "RS101",
     "description": "Calculate the heat generated from the combustion",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-13T23:59:00",
-    "due": "2024-05-20T23:59:00"
+    "due": "2024-05-20T23:59:00",
+    "until": "2024-05-20T23:59:00"
   },
   {
     "_id": "A103",
     "title": "Nozzle Design Project",
     "course": "RS101",
     "description": "Design the nozzle for the rocket",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-20T23:59:00",
-    "due": "2024-05-27T23:59:00"
+    "due": "2024-05-27T23:59:00",
+    "until": "2024-05-27T23:59:00"
   },
   {
     "_id": "A201",
     "title": "Aerodynamics Quiz",
     "course": "RS102",
     "description": "Quiz on Aerodynamics",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-06T23:59:00",
-    "due": "2024-05-13T23:59:00"
+    "due": "2024-05-13T23:59:00",
+    "until": "2024-05-13T23:59:00"
   },
   {
     "_id": "A202",
     "title": "Flow Analysis",
     "course": "RS102",
     "description": "Analyze the airflow of the plane",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-13T23:59:00",
-    "due": "2024-05-20T23:59:00"
+    "due": "2024-05-20T23:59:00",
+    "until": "2024-05-20T23:59:00"
   },
   {
     "_id": "A203",
     "title": "Heating Analysis",
     "course": "RS102",
     "description": "Calculate the heat generated from the plane",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-20T23:59:00",
-    "due": "2024-05-27T23:59:00"
+    "due": "2024-05-27T23:59:00",
+    "until": "2024-05-27T23:59:00"
   },
   {
     "_id": "A301",
     "title": "Structural Design Task",
     "course": "RS103",
     "description": "Design the structure of the rocket",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-06T23:59:00",
-    "due": "2024-05-13T23:59:00"
+    "due": "2024-05-13T23:59:00",
+    "until": "2024-05-13T23:59:00"
   },
   {
     "_id": "A302",
     "title": "Orbital Calculations",
     "course": "RS103",
     "description": "Calculate the trajectory of the orbit",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-13T23:59:00",
-    "due": "2024-05-20T23:59:00"
+    "due": "2024-05-20T23:59:00",
+    "until": "2024-05-20T23:59:00"
   },
   {
     "_id": "A303",
     "title": "Systems Engineering Exam",
     "course": "RS103",
     "description": "Exam on rocket systems engineering",
-    "points": "100",
+    "points": 100,
     "available": "2024-05-20T23:59:00",
-    "due": "2024-05-27T23:59:00"
+    "due": "2024-05-27T23:59:00",
+    "until": "2024-05-27T23:59:00"
   }
 ]
