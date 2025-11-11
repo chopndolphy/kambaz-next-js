@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 export default function EventObject() {
     const [event, setEvent] = useState<object | null>(null);
