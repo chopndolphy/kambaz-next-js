@@ -15,7 +15,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Assignment } from "../../../../Database";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { addAssignment, updateAssignment } from "../reducer";
+import { addAssignment, updateAssignment, setAssignments } from "../reducer";
+import * as client from "../client";
 
 const formatDate = (dateString: string | undefined): string => {
     if (!dateString) return "";
@@ -48,6 +49,16 @@ export default function AssignmentEditor() {
             };
     };
     const [assignment, setAssignment] = useState<Assignment>(getAssignment());
+
+    const onCreateAssignmentForCourse = async () => {
+        const createdAssignment = await client.createAssignmentForCourse(cid, assignment);
+        dispatch(setAssignments([...assignments, createdAssignment]));
+    };
+    const onUpdateAssignment = async (assignment: Assignment) => {
+        await client.updateAssignment(assignment);
+        const newAssignments = assignments.map((a) => a._id === assignment._id ? assignment : a);
+        dispatch(setAssignments(newAssignments));
+    };
 
     return (
         <div id="wd-assignments-editor" className="fs-6 m-1">
@@ -250,11 +261,11 @@ export default function AssignmentEditor() {
                 size="lg"
                 className="me-1 float-end"
                 onClick={() => {
-                    dispatch(
-                        aid === "new"
-                            ? addAssignment(assignment)
-                            : updateAssignment(assignment),
-                    );
+                    if (aid === "new") {
+                        onCreateAssignmentForCourse();
+                    } else {
+                        onUpdateAssignment(assignment);
+                    }
                     router.back();
                 }}
             >

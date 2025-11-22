@@ -7,6 +7,7 @@ import { setCurrentUser } from "../reducer";
 import { Button, FormControl, FormSelect } from "react-bootstrap";
 import { RootState } from "../../store";
 import { User } from "../../Database";
+import * as client from "../client";
 
 export default function Profile() {
     const [profile, setProfile] = useState<User>();
@@ -18,9 +19,15 @@ export default function Profile() {
         if (!currentUser) return redirect("/Account/Signin");
         setProfile(currentUser);
     };
-    const signout = () => {
+    const signout = async () => {
+        await client.signout();
         dispatch(setCurrentUser(null));
         redirect("/Account/Signin");
+    };
+    const updateProfile = async () => {
+        if (!profile) return;
+        const updatedProfile = await client.updateUser(profile);
+        dispatch(setCurrentUser(updatedProfile));
     };
     useEffect(() => {
         fetchProfile();
@@ -31,6 +38,7 @@ export default function Profile() {
         const date = new Date(dateString);
         return date.toISOString().split("T")[0];
     };
+
 
     return (
         <div id="wd-profile-screen">
@@ -53,6 +61,9 @@ export default function Profile() {
                         type="password"
                         id="wd-password"
                         className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, password: e.target.value })
+                        }
                     />
                     <FormControl
                         defaultValue={profile.firstName}
@@ -60,6 +71,9 @@ export default function Profile() {
                         id="wd-firstname"
                         type="text"
                         className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, firstName: e.target.value })
+                        }
                     />
                     <FormControl
                         defaultValue={profile.lastName}
@@ -67,26 +81,43 @@ export default function Profile() {
                         id="wd-lastname"
                         type="text"
                         className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, lastName: e.target.value })
+                        }
                     />
                     <FormControl
                         defaultValue={formatDate(profile.dob)}
                         type="date"
                         id="wd-dob"
                         className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, dob: e.target.value })
+                        }
                     />
                     <FormControl
                         defaultValue={profile.email}
                         type="email"
                         id="wd-email"
                         className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, email: e.target.value })
+                        }
                     />
-                    <FormSelect defaultValue={profile.role} id="wd-role" className="mb-2">
+                    <FormSelect 
+                        defaultValue={profile.role} 
+                        id="wd-role" 
+                        className="mb-2"
+                        onChange={(e) =>
+                            setProfile({ ...profile, role: e.target.value as User["role"] })
+                        }
+                    >
                         <option value="USER">User</option>
                         <option value="ADMIN">Admin</option>
                         <option value="FACULTY">Faculty</option>
                         <option value="STUDENT">Student</option>
                     </FormSelect>
-                    <Button onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
+                    <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
+                    <Button variant="danger" onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
                         Sign out
                     </Button>
                 </div>
