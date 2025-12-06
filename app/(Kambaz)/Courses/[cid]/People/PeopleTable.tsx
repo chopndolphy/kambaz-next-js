@@ -1,18 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
-import { User } from "../../../Database";
+import { User } from "../../../types";
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
 import PeopleDetails from "./Details";
 import Link from "next/link";
 
+interface PeopleTableProps {
+    users: User[];
+    fetchUsers: () => void | Promise<void>;
+}
+
 export default function PeopleTable({
     users,
     fetchUsers,
-}: {
-    users: User[];
-    fetchUsers: () => void;
-}) {
+}: PeopleTableProps) {
     const [showDetails, setShowDetails] = useState(false);
     const [showUserId, setShowUserId] = useState<string | null>(null);
 

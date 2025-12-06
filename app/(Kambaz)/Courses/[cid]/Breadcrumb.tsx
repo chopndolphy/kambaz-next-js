@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { usePathname } from "next/navigation";
-import { Course, Assignment } from "../../Database";
+import { Course, Assignment } from "../../types";
 
 export default function Breadcrumb({
     course,

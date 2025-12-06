@@ -1,10 +1,9 @@
 import axios from "axios";
-import { Course, Module } from "../Database";
+import { Course, Module } from "../types";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const USERS_API = `${HTTP_SERVER}/api/users`;
-const MODULES_API = `${HTTP_SERVER}/api/modules`;
 
 export const fetchAllCourses = async () => {
     const { data } = await axios.get(COURSES_API);

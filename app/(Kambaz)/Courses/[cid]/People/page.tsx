@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import PeopleTable from "./PeopleTable";
 import * as client from "../../client";
-import { User } from "@/app/(Kambaz)/Database";
+import { User } from "@/app/(Kambaz)/types";
 export default function People() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);

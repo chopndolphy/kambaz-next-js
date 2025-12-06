@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { FormControl } from "react-bootstrap";
 import * as client from "../client";
-import { User } from "../../Database";
+import { User } from "../../types";
 
 
 export default function Signup() {

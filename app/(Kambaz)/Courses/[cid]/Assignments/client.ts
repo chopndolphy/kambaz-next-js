@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Assignment } from "../../../Database";
+import { Assignment } from "../../../types";
 const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const ASSIGNMENTS_API = `${HTTP_SERVER}/api/assignments`;

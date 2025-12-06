@@ -4,7 +4,7 @@ import { IoCloseSharp } from "react-icons/io5";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import * as client from "../../../Account/client";
-import { User } from "../../../Database";
+import { User } from "../../../types";
 import { FaPencil } from "react-icons/fa6";
 import { FormControl, FormSelect } from "react-bootstrap";
 

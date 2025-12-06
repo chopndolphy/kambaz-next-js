@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "next/navigation";
 import PeopleTable from "../../Courses/[cid]/People/PeopleTable";
 import * as client from "../client";
-import { User } from "../../Database/";
+import { User } from "../../types";
 import { FormControl } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa6";
 
@@ -44,13 +44,13 @@ export default function Users() {
     };
 
     const { uid } = useParams();
-    const fetchUsers = async () => {
+    const fetchUsers = useCallback(async () => {
         const users = await client.findAllUsers();
         setUsers(users);
-    };
+    }, []);
     useEffect(() => {
         fetchUsers();
-    }, [uid]);
+    }, [uid, fetchUsers]);
     return (
         <div>
             <button

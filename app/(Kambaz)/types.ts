@@ -1,9 +1,3 @@
-import courses from "./courses.json";
-import modules from "./modules.json";
-import assignments from "./assignments.json";
-import users from "./users.json";
-import enrollments from "./enrollments.json";
-export { courses, modules, assignments, users, enrollments };
 export interface User {
     _id: string;
     username: string;
@@ -18,6 +12,7 @@ export interface User {
     lastActivity: string;
     totalActivity: string;
 }
+
 export type Course = {
     _id: string;
     name: string;
@@ -30,6 +25,7 @@ export type Course = {
     description: string;
     modules?: Module[];
 };
+
 export type Lesson = {
     _id: string;
     name: string;
@@ -55,6 +51,7 @@ export type Assignment = {
     due: string;
     until: string;
 };
+
 export type Enrollment = {
     _id: string;
     user: string;

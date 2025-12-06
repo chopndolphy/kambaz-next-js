@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../reducer";
 import { Button, FormControl, FormSelect } from "react-bootstrap";
 import { RootState } from "../../store";
-import { User } from "../../Database";
+import { User } from "../../types";
 import * as client from "../client";
 
 export default function Profile() {

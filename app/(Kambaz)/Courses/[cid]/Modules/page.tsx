@@ -14,7 +14,7 @@ import { BsGripVertical } from "react-icons/bs";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 import { useParams } from "next/navigation";
-import { Module, Lesson } from "../../../Database";
+import { Module, Lesson } from "../../../types";
 import * as client from "../../client";
 import { v4 as uuidv4 } from "uuid";
 import { RootState } from "@/app/(Kambaz)/store";
@@ -43,7 +43,6 @@ export default function Modules() {
             _id: uuidv4(),
             name: moduleName,
             description: "",
-            course: cid,
         };
         const createdModule = await client.createModuleForCourse(cid, newModule);
         dispatch(setModules([...modules, createdModule]));

@@ -12,7 +12,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { RootState } from "@/app/(Kambaz)/store";
 import { useSelector, useDispatch } from "react-redux";
-import { Assignment } from "../../../../Database";
+import { Assignment } from "../../../../types";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { addAssignment, updateAssignment, setAssignments } from "../reducer";
