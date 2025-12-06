@@ -12,13 +12,9 @@ import * as client from "../client";
 export default function Profile() {
     const [profile, setProfile] = useState<User>();
     const dispatch = useDispatch();
-    const { currentUser } = useSelector(
+    const { currentUser, isLoading } = useSelector(
         (state: RootState) => state.accountReducer,
     );
-    const fetchProfile = () => {
-        if (!currentUser) return redirect("/Account/Signin");
-        setProfile(currentUser);
-    };
     const signout = async () => {
         await client.signout();
         dispatch(setCurrentUser(null));
@@ -30,15 +26,19 @@ export default function Profile() {
         dispatch(setCurrentUser(updatedProfile));
     };
     useEffect(() => {
+        const fetchProfile = () => {
+            if (isLoading) return;
+            if (!currentUser) return redirect("/Account/Signin");
+            setProfile(currentUser);
+        };
         fetchProfile();
-    }, []);
+    }, [currentUser, isLoading]);
 
     const formatDate = (dateString: string | undefined): string => {
         if (!dateString) return "";
         const date = new Date(dateString);
         return date.toISOString().split("T")[0];
     };
-
 
     return (
         <div id="wd-profile-screen">
@@ -90,22 +90,18 @@ export default function Profile() {
                         type="date"
                         id="wd-dob"
                         className="mb-2"
-                        onChange={(e) =>
-                            setProfile({ ...profile, dob: e.target.value })
-                        }
+                        onChange={(e) => setProfile({ ...profile, dob: e.target.value })}
                     />
                     <FormControl
                         defaultValue={profile.email}
                         type="email"
                         id="wd-email"
                         className="mb-2"
-                        onChange={(e) =>
-                            setProfile({ ...profile, email: e.target.value })
-                        }
+                        onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                     />
-                    <FormSelect 
-                        defaultValue={profile.role} 
-                        id="wd-role" 
+                    <FormSelect
+                        defaultValue={profile.role}
+                        id="wd-role"
                         className="mb-2"
                         onChange={(e) =>
                             setProfile({ ...profile, role: e.target.value as User["role"] })
@@ -116,8 +112,19 @@ export default function Profile() {
                         <option value="FACULTY">Faculty</option>
                         <option value="STUDENT">Student</option>
                     </FormSelect>
-                    <button onClick={updateProfile} className="btn btn-primary w-100 mb-2"> Update </button>
-                    <Button variant="danger" onClick={signout} className="w-100 mb-2" id="wd-signout-btn">
+                    <button
+                        onClick={updateProfile}
+                        className="btn btn-primary w-100 mb-2"
+                    >
+                        {" "}
+                        Update{" "}
+                    </button>
+                    <Button
+                        variant="danger"
+                        onClick={signout}
+                        className="w-100 mb-2"
+                        id="wd-signout-btn"
+                    >
                         Sign out
                     </Button>
                 </div>

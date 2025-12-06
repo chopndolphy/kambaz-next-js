@@ -28,6 +28,7 @@ export type Course = {
     credits: number;
     image: string;
     description: string;
+    modules?: Module[];
 };
 export type Lesson = {
     _id: string;
@@ -40,7 +41,6 @@ export type Module = {
     _id: string;
     name: string;
     description: string;
-    course: string;
     lessons?: Lesson[];
     editing?: boolean;
 };
@@ -59,4 +59,8 @@ export type Enrollment = {
     _id: string;
     user: string;
     course: string;
+    grade?: number;
+    letterGrade?: string;
+    enrollmentDate?: Date;
+    status?: "ENROLLED" | "DROPPED" | "COMPLETED";
 };

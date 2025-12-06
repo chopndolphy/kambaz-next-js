@@ -4,9 +4,14 @@ import { redirect } from "next/navigation";
 import { RootState } from "../store";
 
 export default function AccountPage() {
-    const { currentUser } = useSelector(
+    const { currentUser, isLoading } = useSelector(
         (state: RootState) => state.accountReducer,
     );
+
+    if (isLoading) {
+        return null;
+    }
+
     if (!currentUser) {
         redirect("/Account/Signin");
     } else {

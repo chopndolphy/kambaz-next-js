@@ -8,13 +8,16 @@ import Breadcrumb from "./Breadcrumb";
 import { RootState } from "../../store";
 import { useRouter } from "next/navigation";
 import { setEnrollments } from "../../Dashboard/enrollments-reducer";
-import * as enrollmentsClient from "../../Dashboard/client";
+import { setCourses } from "../reducer";
+import * as client from "../client";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
     const dispatch = useDispatch();
     const { cid } = useParams<{ cid: string }>();
-    const { enrollments } = useSelector((state: RootState) => state.enrollmentsReducer);
+    const { enrollments } = useSelector(
+        (state: RootState) => state.enrollmentsReducer,
+    );
     const { currentUser } = useSelector(
         (state: RootState) => state.accountReducer,
     );
@@ -24,43 +27,16 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
     );
     const course = courses.find((course) => course._id === cid);
     const [enableBreadcrumb, setEnableBreadcrumb] = useState(true);
-    const [enrollmentsLoaded, setEnrollmentsLoaded] = useState(false);
 
-    // Fetch enrollments if not already loaded
     useEffect(() => {
-        const fetchEnrollments = async () => {
-            if (!currentUser || enrollmentsLoaded) return;
-            try {
-                const fetchedEnrollments = await enrollmentsClient.findEnrollmentsForCurrentUser();
-                dispatch(setEnrollments(fetchedEnrollments));
-                setEnrollmentsLoaded(true);
-            } catch (error) {
-                console.error("Failed to fetch enrollments:", error);
-                setEnrollmentsLoaded(true); // Set to true even on error to prevent infinite loading
-            }
+        const fetchCourse = async () => {
+            if (!cid) return;
+            const fetchedCourse = await client.findCourseById(cid);
+            dispatch(setCourses([fetchedCourse])); // Add to courses array
         };
-        fetchEnrollments();
-    }, [currentUser, dispatch, enrollmentsLoaded]);
 
-    const enrolled = enrollments.some((enrollment) =>
-        enrollment.user === currentUser?._id &&
-        enrollment.course === course?._id);
-
-    // Only redirect if we've loaded enrollments and user is not enrolled
-    useEffect(() => {
-        if (enrollmentsLoaded && currentUser && !enrolled) {
-            router.push("/Dashboard");
-        }
-    }, [enrolled, currentUser, router, enrollmentsLoaded]);
-
-    // Show loading state while checking enrollment
-    if (!enrollmentsLoaded || !currentUser) {
-        return null; // or return a loading spinner
-    }
-
-    if (!enrolled) {
-        return null;
-    }
+        fetchCourse();
+    }, [cid, dispatch]);
 
     return (
         <div id="wd-courses">

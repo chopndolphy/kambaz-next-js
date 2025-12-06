@@ -20,7 +20,7 @@ export default function KambazNavigation() {
         <ListGroup
             id="wd-kambaz-navigation"
             style={{ width: 110 }}
-            className="rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2"
+            className="rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-3"
         >
             <ListGroupItem
                 id="wd-neu-link"

@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from "uuid";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import * as client from "../Courses/client";
-import * as enrollmentsClient from "./client";
 import Image from "next/image";
 import { Course, User } from "../Database";
 import {
@@ -53,15 +52,13 @@ export default function Dashboard() {
     });
     const [showEnrollments, setShowEnrollments] = useState(false);
     const onEnrollUserInCourse = async (courseId: string, user: User) => {
-        await enrollmentsClient.enrollUserInCourse(courseId);
-        // Refresh enrollments from server
-        const enrollments = await enrollmentsClient.findEnrollmentsForCurrentUser();
+        await client.enrollIntoCourse(user._id, courseId);
+        const enrollments = await client.findMyCourses();
         dispatch(setEnrollments(enrollments));
     };
-    const onRemoveEnrollment = async (enrollmentId: string) => {
-        await enrollmentsClient.removeEnrollment(enrollmentId);
-        // Refresh enrollments from server
-        const enrollments = await enrollmentsClient.findEnrollmentsForCurrentUser();
+    const onRemoveEnrollment = async (userId: string, courseId: string) => {
+        await client.unenrollFromCourse(userId, courseId);
+        const enrollments = await client.findMyCourses();
         dispatch(setEnrollments(enrollments));
     };
     const onAddNewCourse = async () => {
@@ -91,11 +88,9 @@ export default function Dashboard() {
         const fetchCourses = async () => {
             try {
                 if (showEnrollments) {
-                    // When showing enrollments, fetch ALL courses
                     const allCourses = await client.fetchAllCourses();
                     dispatch(setCourses(allCourses));
                 } else {
-                    // Otherwise, fetch only enrolled courses
                     const courses = await client.findMyCourses();
                     dispatch(setCourses(courses));
                 }
@@ -110,8 +105,7 @@ export default function Dashboard() {
         const fetchEnrollments = async () => {
             if (!currentUser) return;
             try {
-                const enrollments =
-                    await enrollmentsClient.findEnrollmentsForCurrentUser();
+                const enrollments = await client.findMyCourses();
                 dispatch(setEnrollments(enrollments));
             } catch (error) {
                 console.error(error);
@@ -125,12 +119,9 @@ export default function Dashboard() {
             if (!currentUser) {
                 return null;
             }
-            const enrollment = enrollments.find(
-                (enrollment) =>
-                    enrollment.user === currentUser._id &&
-                    enrollment.course === course._id,
+            const enrolled = enrollments.some(
+                (enrollment) => enrollment._id === course._id,
             );
-            const enrolled = !!enrollment;
             return (
                 <>
                     <Button
@@ -139,7 +130,7 @@ export default function Dashboard() {
                         onClick={(event) => {
                             event.preventDefault();
                             if (enrolled) {
-                                onRemoveEnrollment(enrollment._id);
+                                onRemoveEnrollment(currentUser._id, course._id);
                             } else {
                                 onEnrollUserInCourse(course._id, currentUser);
                             }
@@ -183,40 +174,48 @@ export default function Dashboard() {
     return (
         <div id="wd-dashboard">
             <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-            <h5>
-                New Course
-                <Button
-                    variant="primary"
-                    className="float-end"
-                    id="wd-add-new-course-click"
-                    onClick={onAddNewCourse}
-                >
-                    {" "}
-                    Add{" "}
-                </Button>
-                <Button
-                    variant="warning"
-                    className="me-2 float-end"
-                    id="wd-update-course-click"
-                    onClick={onUpdateCourse}
-                >
-                    {" "}
-                    Update{" "}
-                </Button>
-            </h5>
-            <br />
-            <FormControl
-                value={course.name}
-                className="mb-2"
-                onChange={(e) => setCourse({ ...course, name: e.target.value })}
-            />
-            <FormControl
-                as="textarea"
-                value={course.description}
-                rows={3}
-                onChange={(e) => setCourse({ ...course, description: e.target.value })}
-            />
-            <hr />
+            {currentUser?.role === "FACULTY" ||
+                (currentUser?.role === "ADMIN" && (
+                    <>
+                        <h5>
+                            New Course
+                            <Button
+                                variant="primary"
+                                className="float-end"
+                                id="wd-add-new-course-click"
+                                onClick={onAddNewCourse}
+                            >
+                                {" "}
+                                Add{" "}
+                            </Button>
+                            <Button
+                                variant="warning"
+                                className="me-2 float-end"
+                                id="wd-update-course-click"
+                                onClick={onUpdateCourse}
+                            >
+                                {" "}
+                                Update{" "}
+                            </Button>
+                        </h5>
+                        <br />
+                        <FormControl
+                            value={course.name}
+                            className="mb-2"
+                            onChange={(e) => setCourse({ ...course, name: e.target.value })}
+                        />
+                        <FormControl
+                            as="textarea"
+                            value={course.description}
+                            rows={3}
+                            onChange={(e) =>
+                                setCourse({ ...course, description: e.target.value })
+                            }
+                        />
+                        <hr />
+                    </>
+                ))}
+            ;
             <h2 id="wd-dashboard-published">
                 Published Courses ({courses.length}){" "}
                 <Button
@@ -224,7 +223,7 @@ export default function Dashboard() {
                     className="me-2 float-end"
                     onClick={() => setShowEnrollments(!showEnrollments)}
                 >
-                    Enrollments
+                    {showEnrollments ? "My Courses" : "All Courses"}
                 </Button>
             </h2>
             <hr />
