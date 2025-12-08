@@ -6,8 +6,6 @@ import { useParams } from "next/navigation";
 import { FaAlignJustify } from "react-icons/fa";
 import Breadcrumb from "./Breadcrumb";
 import { RootState } from "../../store";
-import { useRouter } from "next/navigation";
-import { setEnrollments } from "../../Dashboard/enrollments-reducer";
 import { setCourses } from "../reducer";
 import * as client from "../client";
 import * as quizzesClient from "../[cid]/Quizzes/client";
@@ -16,20 +14,9 @@ import { setAssignments } from "./Assignments/reducer";
 import { setQuizzes } from "./Quizzes/reducer";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
-    const router = useRouter();
     const dispatch = useDispatch();
     const { cid } = useParams<{ cid: string }>();
-    const { enrollments } = useSelector(
-        (state: RootState) => state.enrollmentsReducer,
-    );
-    const { currentUser } = useSelector(
-        (state: RootState) => state.accountReducer,
-    );
     const { courses } = useSelector((state: RootState) => state.coursesReducer);
-    const { assignments } = useSelector(
-        (state: RootState) => state.assignmentsReducer,
-    );
-    const { quizzes } = useSelector((state: RootState) => state.quizzesReducer);
     const course = courses.find((course) => course._id === cid);
     const [enableBreadcrumb, setEnableBreadcrumb] = useState(true);
 
@@ -67,13 +54,7 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
                 >
                     <FaAlignJustify className="me-4 fs-4 mb-1" />
                 </button>
-                {enableBreadcrumb ? (
-                    <Breadcrumb
-                        course={course}
-                        assignments={assignments}
-                        quizzes={quizzes}
-                    />
-                ) : null}
+                {enableBreadcrumb ? <Breadcrumb course={course} /> : null}
             </h2>
             <hr />
             <div className="d-flex">
