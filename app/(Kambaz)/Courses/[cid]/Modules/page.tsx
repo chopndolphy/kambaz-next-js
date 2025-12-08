@@ -22,18 +22,16 @@ import { RootState } from "@/app/(Kambaz)/store";
 export default function Modules() {
     const { cid } = useParams<{ cid: string }>();
     const { modules } = useSelector((state: RootState) => state.modulesReducer);
+    const { currentUser } = useSelector(
+        (state: RootState) => state.accountReducer,
+    );
     const [moduleName, setModuleName] = useState("");
     const dispatch = useDispatch();
+
     useEffect(() => {
         const fetchModules = async () => {
-            try {
-                console.log("Fetching modules for course:", cid);
-                const modules = await client.findModulesForCourse(cid as string);
-                console.log("Modules received:", modules);
-                dispatch(setModules(modules));
-            } catch (error) {
-                console.error("Error fetching modules:", error);
-            }
+            const modules = await client.findModulesForCourse(cid as string);
+            dispatch(setModules(modules));
         };
         fetchModules();
     }, [cid, dispatch]);
@@ -57,12 +55,20 @@ export default function Modules() {
         dispatch(setModules(newModules));
     };
 
+    if (!currentUser) {
+        return;
+    }
+
+    const showControls =
+        currentUser.role === "FACULTY" || currentUser.role === "ADMIN";
+
     return (
         <div>
             <ModulesControls
                 setModuleName={setModuleName}
                 moduleName={moduleName}
                 addModule={onCreateModuleForCourse}
+                userRole={currentUser.role}
             />
             <br />
             <br />
@@ -75,8 +81,14 @@ export default function Modules() {
                         className="wd-module p-0 mb-5 fs-5 border-gray"
                         key={module._id}
                     >
-                        <div className="wd-title p-3 ps-2 bg-secondary">
-                            <BsGripVertical className="me-2 fs-3" />
+                        <div
+                            className={
+                                showControls
+                                    ? "wd-title p-3 ps-2 bg-secondary"
+                                    : "wd-title p-3 ps-3 bg-secondary"
+                            }
+                        >
+                            {showControls && <BsGripVertical className="me-2 fs-3" />}
                             {!module.editing && module.name}
                             {module.editing && (
                                 <FormControl
@@ -93,26 +105,28 @@ export default function Modules() {
                                 />
                             )}
 
-                            <ModuleControlButtons
-                                moduleId={module._id}
-                                deleteModule={(moduleId) => {
-                                    onRemoveModule(moduleId);
-                                }}
-                                editModule={(moduleId) => {
-                                    dispatch(editModule(moduleId));
-                                }}
-                            />
+                            {showControls && (
+                                <ModuleControlButtons
+                                    moduleId={module._id}
+                                    deleteModule={(moduleId) => {
+                                        onRemoveModule(moduleId);
+                                    }}
+                                    editModule={(moduleId) => {
+                                        dispatch(editModule(moduleId));
+                                    }}
+                                />
+                            )}
                         </div>
                         {module.lessons && (
                             <ListGroup className="wd-lessons rounded-0">
                                 {module.lessons.map((lesson) => (
                                     <ListGroupItem
-                                        className="wd-lesson p-3 ps-1"
+                                        className={showControls ? "wd-lesson p-3 ps-1" : "p-3 ps-3"}
                                         key={lesson._id}
                                     >
-                                        <BsGripVertical className="me-2 fs-3" />
+                                        {showControls && <BsGripVertical className="me-2 fs-3" />}
                                         {lesson.name}
-                                        <LessonControlButtons />
+                                        {showControls && <LessonControlButtons />}
                                     </ListGroupItem>
                                 ))}
                             </ListGroup>

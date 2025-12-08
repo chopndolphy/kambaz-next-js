@@ -10,6 +10,10 @@ import { useRouter } from "next/navigation";
 import { setEnrollments } from "../../Dashboard/enrollments-reducer";
 import { setCourses } from "../reducer";
 import * as client from "../client";
+import * as quizzesClient from "../[cid]/Quizzes/client";
+import * as assignmentsClient from "../[cid]/Assignments/client";
+import { setAssignments } from "./Assignments/reducer";
+import { setQuizzes } from "./Quizzes/reducer";
 
 export default function CoursesLayout({ children }: { children: ReactNode }) {
     const router = useRouter();
@@ -25,17 +29,26 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
     const { assignments } = useSelector(
         (state: RootState) => state.assignmentsReducer,
     );
+    const { quizzes } = useSelector((state: RootState) => state.quizzesReducer);
     const course = courses.find((course) => course._id === cid);
     const [enableBreadcrumb, setEnableBreadcrumb] = useState(true);
 
     useEffect(() => {
-        const fetchCourse = async () => {
+        const fetchData = async () => {
             if (!cid) return;
-            const fetchedCourse = await client.findCourseById(cid);
-            dispatch(setCourses([fetchedCourse])); // Add to courses array
+
+            const [fetchedCourse, fetchedQuizzes, fetchedAssignments] =
+                await Promise.all([
+                    client.findCourseById(cid),
+                    quizzesClient.findQuizzesForCourse(cid),
+                    assignmentsClient.findAssignmentsForCourse(cid),
+                ]);
+            dispatch(setCourses([fetchedCourse]));
+            dispatch(setAssignments([fetchedAssignments]));
+            dispatch(setQuizzes([fetchedQuizzes]));
         };
 
-        fetchCourse();
+        fetchData();
     }, [cid, dispatch]);
 
     return (
@@ -55,7 +68,11 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
                     <FaAlignJustify className="me-4 fs-4 mb-1" />
                 </button>
                 {enableBreadcrumb ? (
-                    <Breadcrumb course={course} assignments={assignments} />
+                    <Breadcrumb
+                        course={course}
+                        assignments={assignments}
+                        quizzes={quizzes}
+                    />
                 ) : null}
             </h2>
             <hr />

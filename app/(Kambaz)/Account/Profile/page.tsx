@@ -107,10 +107,10 @@ export default function Profile() {
                             setProfile({ ...profile, role: e.target.value as User["role"] })
                         }
                     >
-                        <option value="USER">User</option>
-                        <option value="ADMIN">Admin</option>
-                        <option value="FACULTY">Faculty</option>
                         <option value="STUDENT">Student</option>
+                        <option value="TA">Assistant</option>
+                        <option value="FACULTY">Faculty</option>
+                        <option value="ADMIN">Admin</option>
                     </FormSelect>
                     <button
                         onClick={updateProfile}

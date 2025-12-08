@@ -7,7 +7,7 @@ import { IoIosSearch } from "react-icons/io";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-export default function AssignmentsControls({
+export default function QuizzesControls({
     showControls,
 }: {
     showControls: boolean;
@@ -26,28 +26,16 @@ export default function AssignmentsControls({
             {showControls && (
                 <>
                     <Link
-                        href={`/Courses/${cid}/Assignments/new`}
+                        href={`/Courses/${cid}/Quizzes/new/Editor`}
                         className="btn btn-danger btn-lg me-1 float-end"
-                        id="wd-add-assignment"
+                        id="wd-add-quiz"
                     >
                         <FaPlus
                             className="position-relative me-2"
                             style={{ bottom: "1px" }}
                         />
-                        Assignment
+                        Quiz
                     </Link>
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        className="me-1 float-end"
-                        id="wd-add-assignment-group"
-                    >
-                        <FaPlus
-                            className="position-relative me-2"
-                            style={{ bottom: "1px" }}
-                        />
-                        Group
-                    </Button>
                 </>
             )}
         </div>

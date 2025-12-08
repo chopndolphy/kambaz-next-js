@@ -29,6 +29,7 @@ import {
     setEnrollments,
 } from "./enrollments-reducer";
 import { RootState } from "../store";
+import { current } from "@reduxjs/toolkit";
 
 export default function Dashboard() {
     const { currentUser } = useSelector(
@@ -144,28 +145,33 @@ export default function Dashboard() {
             return (
                 <>
                     <Button variant="primary">Go</Button>
-                    <Button
-                        variant="danger"
-                        id="wd-delete-course-click"
-                        className="float-end"
-                        onClick={(event) => {
-                            event.preventDefault();
-                            onDeleteCourse(course._id);
-                        }}
-                    >
-                        Delete
-                    </Button>
-                    <Button
-                        variant="warning"
-                        id="wd-edit-course-click"
-                        className="me-2 float-end"
-                        onClick={(event) => {
-                            event.preventDefault();
-                            setCourse(course);
-                        }}
-                    >
-                        Edit
-                    </Button>
+                    {(currentUser?.role === "FACULTY" ||
+                        currentUser?.role === "ADMIN") && (
+                            <>
+                                <Button
+                                    variant="danger"
+                                    id="wd-delete-course-click"
+                                    className="float-end"
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        onDeleteCourse(course._id);
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                                <Button
+                                    variant="warning"
+                                    id="wd-edit-course-click"
+                                    className="me-2 float-end"
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        setCourse(course);
+                                    }}
+                                >
+                                    Edit
+                                </Button>
+                            </>
+                        )}
                 </>
             );
         }

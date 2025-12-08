@@ -10,7 +10,10 @@ export default function Labs() {
             <br />
             <b>Source: </b>
             <Link href="https://github.com/chopndolphy/kambaz-next-js">
-                Github Repo
+                Front-end Github Repo
+            </Link>
+            <Link href="https://github.com/chopndolphy/kambaz-node-server-app">
+                Back-end Github Repo
             </Link>
             <br />
             <ul>

@@ -75,7 +75,15 @@ export default function TOC() {
                     href="https://github.com/chopndolphy/kambaz-next-js"
                     target="_blank"
                 >
-                    Project Github
+                    Front-end Github
+                </NavLink>
+            </NavItem>
+            <NavItem>
+                <NavLink
+                    href="https://github.com/chopndolphy/kambaz-node-server-app"
+                    target="_blank"
+                >
+                    Back-end Github
                 </NavLink>
             </NavItem>
         </Nav>

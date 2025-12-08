@@ -8,6 +8,10 @@ export const findAssignmentsForCourse = async (courseId: string) => {
     const response = await axios.get(`${COURSES_API}/${courseId}/assignments`);
     return response.data;
 };
+export const findAssignmentById = async (assignmentId: string) => {
+    const response = await axios.get(`${ASSIGNMENTS_API}/${assignmentId}`);
+    return response.data;
+};
 export const createAssignmentForCourse = async (
     courseId: string,
     assignment: Assignment,
