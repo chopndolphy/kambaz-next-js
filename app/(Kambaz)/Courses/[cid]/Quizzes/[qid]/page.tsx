@@ -147,12 +147,12 @@ export default function QuizTakingPage() {
                                         onClick={handlePrevious}
                                         className="me-2"
                                     >
-                                        ← Previous
+                                        Previous
                                     </Button>
                                 )}
                                 {currentQuestionIndex < totalQuestions - 1 && (
                                     <Button variant="danger" onClick={handleNext}>
-                                        Next ▸
+                                        Next
                                     </Button>
                                 )}
                             </div>
