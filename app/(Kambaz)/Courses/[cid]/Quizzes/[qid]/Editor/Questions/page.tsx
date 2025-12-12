@@ -32,8 +32,9 @@ export default function QuizQuestionsEditor() {
     const dispatch = useDispatch();
     const router = useRouter();
 
-    const quiz = quizzes.find((q: Quiz) => q._id === qid);
-    const [questions, setQuestions] = useState<Question[]>(quiz?.questions || []);
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [questions, setQuestions] = useState<Question[]>([]);
     const [editingQuestionId, setEditingQuestionId] = useState<string | null>(
         null,
     );
@@ -41,15 +42,51 @@ export default function QuizQuestionsEditor() {
 
     useEffect(() => {
         const fetchQuiz = async () => {
-            if (qid && qid !== "new") {
-                const fetchedQuiz = await client.findQuizById(qid);
-                if (fetchedQuiz) {
-                    setQuestions(fetchedQuiz.questions || []);
+            if (qid === "new") {
+                const defaultQuiz: Quiz = {
+                    _id: "new",
+                    course: cid || "",
+                    title: "",
+                    description: "",
+                    points: 0,
+                    available: new Date().toISOString(),
+                    due: new Date().toISOString(),
+                    until: new Date().toISOString(),
+                    published: false,
+                    type: "GRADED_QUIZ",
+                    group: "QUIZZES",
+                    shuffleAnswers: true,
+                    timeLimit: 20,
+                    multipleAttempts: false,
+                    attemptsAllowed: 1,
+                    showCorrectAnswers: false,
+                    accessCode: "",
+                    oneQuestionAtATime: true,
+                    webcamRequired: false,
+                    lockQuestionsAfterAnswering: false,
+                    questions: [],
+                };
+                setQuiz(defaultQuiz);
+                setQuestions([]);
+                setLoading(false);
+            } else {
+                const foundQuiz = quizzes.find((q: Quiz) => q._id === qid);
+                if (foundQuiz) {
+                    setQuiz(foundQuiz);
+                    setQuestions(foundQuiz.questions || []);
+                    setLoading(false);
+                } else {
+                    const fetchedQuiz = await client.findQuizById(qid);
+                    if (fetchedQuiz) {
+                        setQuiz(fetchedQuiz);
+                        setQuestions(fetchedQuiz.questions || []);
+                    }
+                    setLoading(false);
                 }
             }
         };
         fetchQuiz();
-    }, [qid]);
+    }, [qid, cid, quizzes]);
 
     const totalPoints = questions.reduce((sum, q) => sum + q.points, 0);
 
@@ -136,12 +173,18 @@ export default function QuizQuestionsEditor() {
             points: totalPoints,
         };
 
-        await client.updateQuiz(updatedQuiz);
-        const newQuizzes = quizzes.map((q) =>
-            q._id === updatedQuiz._id ? updatedQuiz : q,
-        );
-        dispatch(setQuizzes(newQuizzes));
-        router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        if (qid === "new") {
+            const createdQuiz = await client.createQuizForCourse(cid, updatedQuiz);
+            dispatch(setQuizzes([...quizzes, createdQuiz]));
+            router.push(`/Courses/${cid}/Quizzes/${createdQuiz._id}/Details`);
+        } else {
+            await client.updateQuiz(updatedQuiz);
+            const newQuizzes = quizzes.map((q) =>
+                q._id === updatedQuiz._id ? updatedQuiz : q,
+            );
+            dispatch(setQuizzes(newQuizzes));
+            router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        }
     };
 
     const handleSaveQuiz = async () => {
@@ -153,19 +196,29 @@ export default function QuizQuestionsEditor() {
             points: totalPoints,
         };
 
-        await client.updateQuiz(updatedQuiz);
-        const newQuizzes = quizzes.map((q) =>
-            q._id === updatedQuiz._id ? updatedQuiz : q,
-        );
-        dispatch(setQuizzes(newQuizzes));
-        router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        if (qid === "new") {
+            const createdQuiz = await client.createQuizForCourse(cid, updatedQuiz);
+            dispatch(setQuizzes([...quizzes, createdQuiz]));
+            router.push(`/Courses/${cid}/Quizzes/${createdQuiz._id}/Details`);
+        } else {
+            await client.updateQuiz(updatedQuiz);
+            const newQuizzes = quizzes.map((q) =>
+                q._id === updatedQuiz._id ? updatedQuiz : q,
+            );
+            dispatch(setQuizzes(newQuizzes));
+            router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        }
     };
 
     const handleCancelEdit = () => {
-        router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        if (qid === "new") {
+            router.push(`/Courses/${cid}/Quizzes`);
+        } else {
+            router.push(`/Courses/${cid}/Quizzes/${qid}/Details`);
+        }
     };
 
-    if (!quiz) {
+    if (loading || !quiz) {
         return <div>Loading...</div>;
     }
 

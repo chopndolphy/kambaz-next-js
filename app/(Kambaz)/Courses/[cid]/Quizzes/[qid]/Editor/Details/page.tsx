@@ -75,6 +75,7 @@ export default function QuizDetailsEditor() {
     const onCreateQuizForCourse = async (quizToCreate: Quiz) => {
         const createdQuiz = await client.createQuizForCourse(cid, quizToCreate);
         dispatch(setQuizzes([...quizzes, createdQuiz]));
+        return createdQuiz;
     };
     const onUpdateQuiz = async (quiz: Quiz) => {
         await client.updateQuiz(quiz);
@@ -347,13 +348,14 @@ export default function QuizDetailsEditor() {
                 variant="danger"
                 size="lg"
                 className="me-1 float-end"
-                onClick={() => {
+                onClick={async () => {
                     if (qid === "new") {
-                        onCreateQuizForCourse(quiz);
+                        const createdQuiz = await onCreateQuizForCourse(quiz);
+                        router.push(`${QUIZ_LIST}/${createdQuiz._id}/Details`);
                     } else {
-                        onUpdateQuiz(quiz);
+                        await onUpdateQuiz(quiz);
+                        router.push(`${QUIZ_LIST}/${qid}/Details`);
                     }
-                    router.push(`${QUIZ_LIST}/${qid}/Details`);
                 }}
             >
                 Save
@@ -362,15 +364,15 @@ export default function QuizDetailsEditor() {
                 variant="danger"
                 size="lg"
                 className="me-1 float-end"
-                onClick={() => {
+                onClick={async () => {
                     const publishedQuiz = {
                         ...quiz,
                         published: true,
                     };
                     if (qid === "new") {
-                        onCreateQuizForCourse(publishedQuiz);
+                        await onCreateQuizForCourse(publishedQuiz);
                     } else {
-                        onUpdateQuiz(publishedQuiz);
+                        await onUpdateQuiz(publishedQuiz);
                     }
                     router.push(QUIZ_LIST);
                 }}

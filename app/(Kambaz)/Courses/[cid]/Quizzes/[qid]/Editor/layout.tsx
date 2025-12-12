@@ -14,19 +14,49 @@ export default function QuizEditorLayout({
     children: React.ReactNode;
 }) {
     const { cid, qid } = useParams<{ cid: string; qid: string }>();
-    const [quiz, setQuiz] = useState<Quiz>();
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
+    const [loading, setLoading] = useState(true);
     const pathname = usePathname();
     const QUIZ_EDITOR = `/Courses/${cid}/Quizzes/${qid}/Editor`;
+    
     useEffect(() => {
         const fetchQuiz = async () => {
-            const quiz = await client.findQuizById(qid as string);
-            setQuiz(quiz);
+            if (qid === "new") {
+                setQuiz({
+                    _id: "new",
+                    course: cid || "",
+                    title: "",
+                    description: "",
+                    points: 0,
+                    available: new Date().toISOString(),
+                    due: new Date().toISOString(),
+                    until: new Date().toISOString(),
+                    published: false,
+                    type: "GRADED_QUIZ",
+                    group: "QUIZZES",
+                    shuffleAnswers: true,
+                    timeLimit: 20,
+                    multipleAttempts: false,
+                    attemptsAllowed: 1,
+                    showCorrectAnswers: false,
+                    accessCode: "",
+                    oneQuestionAtATime: true,
+                    webcamRequired: false,
+                    lockQuestionsAfterAnswering: false,
+                    questions: [],
+                });
+                setLoading(false);
+            } else {
+                const fetchedQuiz = await client.findQuizById(qid as string);
+                setQuiz(fetchedQuiz);
+                setLoading(false);
+            }
         };
         fetchQuiz();
-    }, [qid]);
+    }, [qid, cid]);
 
-    if (!quiz) {
-        return null;
+    if (loading || !quiz) {
+        return <div>Loading...</div>;
     }
 
     return (

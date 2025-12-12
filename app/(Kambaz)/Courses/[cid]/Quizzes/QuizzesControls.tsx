@@ -26,7 +26,7 @@ export default function QuizzesControls({
             {showControls && (
                 <>
                     <Link
-                        href={`/Courses/${cid}/Quizzes/new/Editor`}
+                        href={`/Courses/${cid}/Quizzes/new/Editor/Details`}
                         className="btn btn-danger btn-lg me-1 float-end"
                         id="wd-add-quiz"
                     >
