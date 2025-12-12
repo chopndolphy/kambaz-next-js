@@ -141,7 +141,7 @@ export default function QuizTakingPage() {
                             </div>
 
                             <div className="d-flex justify-content-end mt-4">
-                                {!quiz.oneQuestionAtATime && currentQuestionIndex > 0 && (
+                                {currentQuestionIndex > 0 && (
                                     <Button
                                         variant="secondary"
                                         onClick={handlePrevious}
@@ -159,14 +159,19 @@ export default function QuizTakingPage() {
                         </div>
                     )}
 
-                    {!quiz.oneQuestionAtATime &&
-                        currentQuestionIndex === totalQuestions - 1 && (
-                            <div className="d-flex justify-content-end">
-                                <Button variant="danger" size="lg">
-                                    Submit Quiz
-                                </Button>
-                            </div>
-                        )}
+                    {currentQuestionIndex === totalQuestions - 1 && (
+                        <div className="d-flex justify-content-end">
+                            <Button
+                                variant="danger"
+                                size="lg"
+                                onClick={() => {
+                                    router.back();
+                                }}
+                            >
+                                Submit Quiz
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
